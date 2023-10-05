@@ -1,0 +1,26 @@
+name: Deploy to VM
+
+on:
+  push:
+    branches:
+      - main
+      - stag
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy
+        uses: actions/checkout@v2
+
+      - name: Install SSH client
+        run: sudo apt-get install -y openssh-client sshpass
+
+      - name: Deploy to VM
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no  root@68.183.246.92  bash /var/www/website/deploy.sh
+          elif [ "$GITHUB_REF" = "refs/heads/stag" ]; then
+            sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no  root@68.183.246.92  bash /var/www/website/deploy.sh
+          fi
