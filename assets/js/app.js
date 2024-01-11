@@ -104,11 +104,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // Contact Form Validation
 //
 
-function validateForm() {
-    var name = document.forms["myForm"]["name"].value;
-    var email = document.forms["myForm"]["email"].value;
+document.getElementById('myForm')
+ .addEventListener('submit', function(event) {
+   event.preventDefault();
+   document.querySelector("#submit").setAttribute("disabled", true);
+
+    const serviceID = 'default_service';
+    const templateID = 'template_2o7wtpd';
+
+    var name = document.forms["myForm"]["from_name"].value;
+    var email = document.forms["myForm"]["from_email"].value;
     var subject = document.forms["myForm"]["subject"].value;
-    var comments = document.forms["myForm"]["comments"].value;
+    var comments = document.forms["myForm"]["message"].value;
     document.getElementById("error-msg").style.opacity = 0;
     document.getElementById('error-msg').innerHTML = "";
     if (name == "" || name == null) {
@@ -132,21 +139,18 @@ function validateForm() {
         return false;
     }
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("simple-msg").innerHTML = this.responseText;
-            document.forms["myForm"]["name"].value = "";
-            document.forms["myForm"]["email"].value = "";
-            document.forms["myForm"]["subject"].value = "";
-            document.forms["myForm"]["comments"].value = "";
-        }
-    };
-    xhttp.open("POST", "assets/php/contact.php", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("name=" + name + "&email=" + email + "&subject=" + subject + "&comments=" + comments);
+    emailjs.sendForm(serviceID, templateID, this)
+    .then(() => {
+    //   btn.value = 'Send Email';
+    document.querySelector("#submit").setAttribute("disabled", false);
+      alert('Sent!');
+    }, (err) => {
+    //   btn.value = 'Send Email';
+    document.querySelector("#submit").setAttribute("disabled", false);
+      alert(JSON.stringify(err));
+    });
     return false;
-}
+ })
 
 function fadeIn() {
     var fade = document.getElementById("error-msg");
