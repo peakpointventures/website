@@ -37,6 +37,11 @@ var scroll = new SmoothScroll('#navbar-navlist a', {
     offset: 70
 });
 
+// Smooth scroll 
+var a_scroll = new SmoothScroll('.cta', {
+    speed: 500,
+    offset: 70
+});
 
 
 
@@ -108,6 +113,7 @@ document.getElementById('myForm')
  .addEventListener('submit', function(event) {
    event.preventDefault();
    document.querySelector("#submit").setAttribute("disabled", true);
+   document.querySelector("#submit").value= "Sending email..."
 
     const serviceID = 'default_service';
     const templateID = 'template_2o7wtpd';
@@ -121,34 +127,44 @@ document.getElementById('myForm')
     if (name == "" || name == null) {
         document.getElementById('error-msg').innerHTML = "<div class='p-3 text-center mb-4 text-sm text-orange-700 bg-orange-100 rounded error_message'>Please enter a Name</div>";
         fadeIn();
+        document.querySelector("#submit").removeAttribute("disabled", false);
+        document.querySelector("#submit").value= "Send Message"
         return false;
     }
     if (email == "" || email == null) {
         document.getElementById('error-msg').innerHTML = "<div class='p-3 text-center mb-4 text-sm text-orange-700 bg-orange-100 rounded error_message'>Please enter a Email</div>";
         fadeIn();
+        document.querySelector("#submit").removeAttribute("disabled", false);
+        document.querySelector("#submit").value= "Send Message"
         return false;
     }
     if (subject == "" || subject == null) {
         document.getElementById('error-msg').innerHTML = "<div class='p-3 text-center mb-4 text-sm text-orange-700 bg-orange-100 rounded error_message'>Please enter a Subject</div>";
         fadeIn();
+        document.querySelector("#submit").removeAttribute("disabled", false);
+        document.querySelector("#submit").value= "Send Message"
         return false;
     }
     if (comments == "" || comments == null) {
         document.getElementById('error-msg').innerHTML = "<div class='p-3 text-center mb-4 text-sm text-orange-700 bg-orange-100 rounded error_message'>Please enter a Comments</div>";
         fadeIn();
+        document.querySelector("#submit").removeAttribute("disabled", false);
+        document.querySelector("#submit").value= "Send Message"
         return false;
     }
 
     emailjs.sendForm(serviceID, templateID, this)
     .then(() => {
     //   btn.value = 'Send Email';
-    document.querySelector("#submit").setAttribute("disabled", false);
-      alert('Sent!');
+    // document.querySelector("#submit").removeAttribute("disabled", false);
+    document.querySelector("#submit").value= "Message sent"
+      alert('Your query has been sent!');
     }, (err) => {
     //   btn.value = 'Send Email';
-    document.querySelector("#submit").setAttribute("disabled", false);
+    document.querySelector("#submit").removeAttribute("disabled", false);
       alert(JSON.stringify(err));
     });
+    document.querySelector("#submit").value= "Send Message"
     return false;
  })
 
@@ -160,6 +176,9 @@ function fadeIn() {
             opacity = opacity + 0.5
             fade.style.opacity = opacity;
         } else {
+            setTimeout(()=>{
+                fade.style.opacity=0
+            },3000)
             clearInterval(intervalID);
         }
     }, 200);
